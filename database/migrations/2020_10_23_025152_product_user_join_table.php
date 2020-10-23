@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ProductsUsersJoinTable extends Migration
+class ProductUserJoinTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class ProductsUsersJoinTable extends Migration
      */
     public function up()
     {
-        Schema::create('products_users', function (Blueprint $table) {
+        Schema::create('product_user', function (Blueprint $table) {
             $table->id();
 			$table->unsignedInteger("product_id");
 			$table->unsignedInteger("user_id");
@@ -28,6 +28,6 @@ class ProductsUsersJoinTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products_users');
+        Schema::dropIfExists('product_user');
     }
 }

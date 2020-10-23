@@ -14,7 +14,7 @@ class User extends Authenticatable
 	
 	public function products() 
 	{
-		return $this->hasAndBelongsToMany(Product::class);
+		return $this->belongsToMany(Product::class);
 	}
 	
 	public function createdProducts() 

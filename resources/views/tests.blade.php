@@ -81,6 +81,9 @@
 		<h4>API Token</h4>
 		<div id="ApiToken" style="width:50%; margin: 0 auto; height:24px; border: 1px solid black"></div>
 		<hr>
+		<h4>Product ID</h4>
+		<input type="text" id="ProductID">
+		<hr>
 		<h4>Set User</h4>
 		<div class='boudin token'
 			data='{"email":"wlewis.wlewis@gmail.com","password":"password"}'
@@ -105,29 +108,30 @@
 		<div class='boudin api' method='POST' url='api/products' 
 			data='{"name":"Cheetos","description":"It aint easy bein cheesy","price":"1.49"}'
 		>Create Product</div>
-		<div class='boudin api' method='PUT' url='api/products/1' 
+		<div class='boudin api' method='PUT' url='api/products' append-id=1
 			data='{"name":"Cheetos","description":"It aint easy bein cheesy"}'
-		>Update Product 1 - missing field</div>
-		<div class='boudin api' method='PUT' url='api/products/1' 
+		>Update Product - missing field</div>
+		<div class='boudin api' method='PUT' url='api/products' append-id=1
 			data='{"name":"Flamin Hot Cheetos","description":"Flamin hot!","price":"1.99"}'
-		>Update Product 1</div>
-		<div class='boudin api' method='DELETE' url='api/products/1' 
+		>Update Product</div>
+		<div class='boudin api' method='DELETE' url='api/products' append-id=1
 			data='{}'
-		>Delete Product 1</div>
+		>Delete Product</div>
 		<div class='boudin api' method='GET' url='api/products' 
 			data='{}'
 		>List All Products</div>
+		<div class='boudin api' method='GET' url='api/product-users' 
+			data='{}'
+		>List User's Products</div>
+		<div class='boudin api' method='PUT' url='api/product-users' append-id=1
+			data='{}'
+		>Add Product to User</div>
+		<div class='boudin api' method='DELETE' url='api/product-users' append-id=1
+			data='{}'
+		>Remove Product from User</div>
     </body>
 	<script>
 $(document).ready(function() {
-	/*
-	$.ajaxSetup({
-		headers: {
-			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		}
-	});
-	*/
-	
 	$(".token").on("click", function() {
 		var $t = $(this);
 		var data = JSON.parse($t.attr("data"));
@@ -152,6 +156,9 @@ $(document).ready(function() {
 		var $t = $(this);
 		var method = $t.attr("method");
 		var url = $t.attr("url");
+		if ($t.attr("append-id")) {
+			url += "/" + $("#ProductID").val();
+		}
 		var apiToken = $("#ApiToken").html();
 		if (apiToken.length) {
 			url += "?api_token=" + apiToken;
@@ -162,7 +169,10 @@ $(document).ready(function() {
 			method : method,
 			data : data,
 			success : function(response) {
-				$("#ResultsGoHere").html(JSON.stringify(response));	
+				$("#ResultsGoHere").html(JSON.stringify(response));
+				if (response.id) {
+					$("#ProductID").val(response.id);
+				}
 			},
 			error : function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);

@@ -10,7 +10,7 @@ class Product extends Model
 	
     public function users() 
 	{
-		return $this->hasAndBelongsToMany(User::class);
+		return $this->belongsToMany(User::class);
 	}
 	
 	public function creator()

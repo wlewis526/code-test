@@ -27,5 +27,9 @@ Route::group(['middleware' => ['auth:api']], function(){
 	Route::get('products', 'ProductsController@index');
 	Route::get('products/{id}', 'ProductsController@get');
 	Route::put('products/{id}', 'ProductsController@update');
-	Route::delete('products/{id}', 'ProductsController@destroys');
+	Route::delete('products/{id}', 'ProductsController@destroy');   
+	
+	Route::get('product-users', 'ProductUsersController@index');
+	Route::put('product-users/{product_id}', 'ProductUsersController@update');
+	Route::delete('product-users/{product_id}', 'ProductUsersController@destroy');
 });
