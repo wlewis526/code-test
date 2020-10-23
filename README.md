@@ -1,3 +1,18 @@
+Setup instructions :
+
+Built with PHP 7.2.10, MySQL 5.7.23
+
+Create a MySQL database called "code_test", utf8_general_ci encoding.
+The Laravel application will connect on localhost:3306 with username "root" and an empty password.
+
+Run migrations and seeder:
+php artisan migrate
+php artisan db:seed --class=UserSeeder
+
+
+
+________________ORIGINAL FILE CONTENTS FOLLOW_______________
+
 Hello Wes Lewis! Thank you for considering joining the Lawline team. Below is a coding exercise that will allow you
 to highlight your skills.
 
