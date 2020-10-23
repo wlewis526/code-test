@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Code Test - API Testing</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -76,13 +76,16 @@
     </head>
     <body>
         <p>Results go here</p>
-		<div id="ResultsGoHere" style="width:100%; height:200px; overflow-y:scroll;border: 1px solid black"></div>
+		<div id="ResultsGoHere" style="width:100%; height:100px; overflow-y:scroll;border: 1px solid black"></div>
 		<hr>
 		<h4>API Token</h4>
 		<div id="ApiToken" style="width:50%; margin: 0 auto; height:24px; border: 1px solid black"></div>
 		<hr>
 		<h4>Product ID</h4>
 		<input type="text" id="ProductID">
+		<hr>
+		<h4>Image Input (for Upload Image API)</h4>
+		<input type="file" id="ImageInput">
 		<hr>
 		<h4>Set User</h4>
 		<div class='boudin token'
@@ -129,6 +132,7 @@
 		<div class='boudin api' method='DELETE' url='api/product-users' append-id=1
 			data='{}'
 		>Remove Product from User</div>
+		<div class='boudin uploadImage'>Upload Image</div>
     </body>
 	<script>
 $(document).ready(function() {
@@ -151,7 +155,7 @@ $(document).ready(function() {
 			},
 		});
 	});
-	
+		
 	$(".api").on("click", function() {
 		var $t = $(this);
 		var method = $t.attr("method");
@@ -164,7 +168,7 @@ $(document).ready(function() {
 			url += "?api_token=" + apiToken;
 		}
 		var data = JSON.parse($t.attr("data"));
-		
+			
 		$.ajax(url, {
 			method : method,
 			data : data,
@@ -179,6 +183,44 @@ $(document).ready(function() {
 				$("#ResultsGoHere").html(errorThrown + "<br>" + jqXHR.responseJSON );	
 			},
 		});
+	});
+	
+	$(".uploadImage").on("click", function() {
+		var $t = $(this);
+		var method = "PUT";
+		var url = "api/products/" + $("#ProductID").val() + "/image";
+
+		var apiToken = $("#ApiToken").html();
+		if (apiToken.length) {
+			url += "?api_token=" + apiToken;
+		}
+		var input = document.getElementById("ImageInput");
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onerror = function(event) {
+				$("#ResultsGoHere").html("Image input failed.");
+			};
+			reader.onload = function(event) {
+				var data = {
+					image : event.target.result
+				};
+				$.ajax(url, {
+					method : method,
+					data : data,
+					success : function(response) {
+						$("#ResultsGoHere").html(JSON.stringify(response));
+						if (response.id) {
+							$("#ProductID").val(response.id);
+						}
+					},
+					error : function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						$("#ResultsGoHere").html(errorThrown + "<br>" + jqXHR.responseJSON );	
+					},
+				});
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
 	});
 });
 	</script>

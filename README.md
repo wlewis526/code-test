@@ -5,9 +5,13 @@ Built with PHP 7.2.10, MySQL 5.7.23
 Create a MySQL database called "code_test", utf8_general_ci encoding.
 The Laravel application will connect on localhost:3306 with username "root" and an empty password.
 
+Create link to public storage:
+> php artisan storage:link
+
 Run migrations and seeder:
-php artisan migrate
-php artisan db:seed --class=UserSeeder
+> php artisan migrate
+> php artisan db:seed --class=UserSeeder
+
 
 
 
