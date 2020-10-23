@@ -1,4 +1,4 @@
-Setup instructions :
+Setup instructions:
 
 Built with PHP 7.2.10, MySQL 5.7.23
 
