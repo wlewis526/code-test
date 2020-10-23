@@ -13,7 +13,7 @@ class ProductsController extends Controller
 {
     public function index() 
 	{
-		$products = Product::get();
+		$products = Product::with('creator')->get();
 		return Response::json($products);
 	}
 	
@@ -61,11 +61,7 @@ class ProductsController extends Controller
 		
 		$product = Product::findOrFail($id);
 		$product->fill(Request::input());
-		try {
-			$product = $product->saveForUser(Auth::user()->id);
-		} catch (\Exception $e) {
-			return Response::json($e->getMessage(), 400);
-		}
+		$product = $product->saveForUser(Auth::user()->id);
 		return Response::json($product);
 	}
 	
@@ -75,6 +71,9 @@ class ProductsController extends Controller
 		if ($product->created_by != Auth::user()->id) {
 			return Response::json("Deleting products created by other users is not allowed.", 403);
 		}
+		ProductUser::where('product_id', $id)->get()->each(function($productUser) {
+			$productUser->delete();
+		});
 		$product->delete();
 		return Response::json($product);
 	}
@@ -101,11 +100,7 @@ class ProductsController extends Controller
 		$path = asset("storage/{$fileName}");
 		
 		$product->image = $path;
-		try {
-			$product = $product->saveForUser(Auth::user()->id);
-		} catch (\Exception $e) {
-			return Response::json($e->getMessage(), 400);
-		}
+		$product = $product->saveForUser(Auth::user()->id);
 		return Response::json($product);
 	}
 }

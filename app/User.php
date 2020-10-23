@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     protected $hidden = [
-        'password'
+        'password', 'api_token'
     ];
 	
 	public function products() 

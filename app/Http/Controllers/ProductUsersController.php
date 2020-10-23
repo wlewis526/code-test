@@ -13,7 +13,7 @@ class ProductUsersController extends Controller
 {
     public function index()
 	{
-		$products = Auth::user()->products;
+		$products = Auth::user()->products()->with("creator")->get();
 		return Response::json($products);
 	}
 	

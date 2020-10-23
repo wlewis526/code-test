@@ -14,5 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('tests');
+    return view('vue-frontend');
+});
+Route::get('/tests', function() {
+	return view('tests');
 });
