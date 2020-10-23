@@ -21,4 +21,9 @@ class User extends Authenticatable
 	{
 		return $this->hasMany(Product::class, "created_by");
 	}
+	
+	public function subscription()
+	{
+		return $this->hasOne(Subscription::class);
+	}
 }

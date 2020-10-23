@@ -20,6 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('token', 'LoginController@token');
 
+Route::group(['middleware' => ['auth:api', 'subscription']], function(){
+	Route::post('products', 'ProductsController@store');
+});
 Route::group(['middleware' => ['auth:api']], function(){
-	Route::resource('products', 'ProductsController');
+	Route::get('products', 'ProductsController@index');
+	Route::get('products/{id}', 'ProductsController@get');
+	Route::put('products/{id}', 'ProductsController@update');
+	Route::delete('products/{id}', 'ProductsController@destroys');
 });

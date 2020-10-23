@@ -67,60 +67,95 @@
 				background-color : #04c;
 				cursor: pointer;
 				font-weight: bold;
-				padding: 10px 5px;
+				padding: 5px 10px;
+				margin: 5px 10px;
 			}
         </style>
-		<meta name="csrf-token" content="{{ csrf_token() }}"></meta>
+		{{--<meta name="csrf-token" content="{{ csrf_token() }}"></meta>--}}
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     </head>
     <body>
         <p>Results go here</p>
 		<div id="ResultsGoHere" style="width:100%; height:200px; overflow-y:scroll;border: 1px solid black"></div>
 		<hr>
-		<div class='boudin' method='POST' url='api/token' 
+		<h4>API Token</h4>
+		<div id="ApiToken" style="width:50%; margin: 0 auto; height:24px; border: 1px solid black"></div>
+		<hr>
+		<h4>Set User</h4>
+		<div class='boudin token'
 			data='{"email":"wlewis.wlewis@gmail.com","password":"password"}'
-		>Get Token for Wes</div>
-		<div class='boudin' method='POST' url='token' 
+		>Testy McTesterson</div>
+		<div class='boudin token'
+			data='{"email":"jello@holiday.kh","password":"SoIThrewTheRock"}'
+		>Jello Biafra</div>
+		<div class='boudin token'
+			data='{"email":"greg@epitaph.org","password":"NoControl"}'
+		>Greg Graffin</div>
+		<div class='boudin token'
+			data='{"email":"dick_lucas@bath.co.uk","password":"WhenTheBombDrops"}'
+		>Dick Lucas (inactive sub)</div>
+		<div class='boudin token'
+			data='{"email":"stza@ninth_and_c.org","password":"RockThe40oz"}'
+		>Scott Sturgeon (no sub)</div>
+		<div class='boudin token' 
 			data='{"email":"wlewis.wlewis@gmail.com","password":"wrong"}'
-		>Get Token - Bad UN / PW</div>
-		<div class='boudin' method='POST' url='api/products' 
+		>Bad UN / PW</div>
+		<hr>
+		<h4>APIs</h4>
+		<div class='boudin api' method='POST' url='api/products' 
 			data='{"name":"Cheetos","description":"It aint easy bein cheesy","price":"1.49"}'
-		>Create Product - No Token</div>
-		<div class='boudin' method='POST' url='api/products?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
-			data='{"name":"Cheetos","description":"It aint easy bein cheesy","price":"1.49"}'
-		>Create Product - Wes' Token</div>
-		<div class='boudin' method='PUT' url='api/products/1?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
+		>Create Product</div>
+		<div class='boudin api' method='PUT' url='api/products/1' 
 			data='{"name":"Cheetos","description":"It aint easy bein cheesy"}'
 		>Update Product 1 - missing field</div>
-		<div class='boudin' method='PUT' url='api/products/1?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
+		<div class='boudin api' method='PUT' url='api/products/1' 
 			data='{"name":"Flamin Hot Cheetos","description":"Flamin hot!","price":"1.99"}'
-		>Update Product 1 - Wes' Token</div>
-		<div class='boudin' method='PUT' url='api/products/1?api_token=3vgOlXU1XTu2BhP4Zy4gyCWFT4D5JUDVjERIPWW0EXGcQOz73qZYedB8qZ3V' 
-			data='{"name":"Flamin Hot Cheetos Popcorn","description":"Flamin hot! And popcorn!","price":"2.49"}'
-		>Update Product 1 - Jello's Token</div>
-		<div class='boudin' method='DELETE' url='api/products/1?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
+		>Update Product 1</div>
+		<div class='boudin api' method='DELETE' url='api/products/1' 
 			data='{}'
-		>Delete Product 1 - Wes' Token</div>
-		<div class='boudin' method='DELETE' url='api/products/2?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
-			data='{}'
-		>Delete Product 2 - Wes' Token</div>
-		<div class='boudin' method='GET' url='api/products?api_token=EIdCBSGlFdvFupGqP7VAydm20paUIvblCZTWXxfJWXPopBLAc31ae1Vd0fIr' 
+		>Delete Product 1</div>
+		<div class='boudin api' method='GET' url='api/products' 
 			data='{}'
 		>List All Products</div>
     </body>
 	<script>
 $(document).ready(function() {
-	
+	/*
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
+	*/
 	
-	$(".boudin").on("click", function() {
+	$(".token").on("click", function() {
+		var $t = $(this);
+		var data = JSON.parse($t.attr("data"));
+		
+		$.ajax("api/token", {
+			method : "POST",
+			data : data,
+			success : function(response) {
+				var strToken = JSON.stringify(response);
+				$("#ResultsGoHere").html(strToken);	
+				$("#ApiToken").html(strToken.replaceAll('"', ''));
+			},
+			error : function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				$("#ResultsGoHere").html(errorThrown + "<br>" + jqXHR.responseJSON );
+				$("#ApiToken").html("");
+			},
+		});
+	});
+	
+	$(".api").on("click", function() {
 		var $t = $(this);
 		var method = $t.attr("method");
 		var url = $t.attr("url");
+		var apiToken = $("#ApiToken").html();
+		if (apiToken.length) {
+			url += "?api_token=" + apiToken;
+		}
 		var data = JSON.parse($t.attr("data"));
 		
 		$.ajax(url, {
